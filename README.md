@@ -67,20 +67,20 @@ A aplicação estará disponível em `http://localhost:3000` (ou na porta config
 
 # Comandos pro prisma:
 
-## 2. Crie a migration (apenas o arquivo SQL, sem aplicar)
+## 1. Crie a migration (apenas o arquivo SQL, sem aplicar)
 Isso garante que você revise o SQL antes de executar.
 
 ```bash
 npx prisma migrate dev --name <nome-da-migration>
 ````
 
-## 4. Aplique a migration
+## 3. Aplique a migration
 
 ```bash
 npx prisma migrate dev
 ```
 
-## 5. Gere o Prisma Client atualizado
+## 3. Gere o Prisma Client atualizado
 
 ```bash
 npx prisma generate
