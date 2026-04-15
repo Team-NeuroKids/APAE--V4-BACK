@@ -6,6 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -14,7 +15,7 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id        String @id
   name      String
   email     String
   cpf       String
@@ -22,7 +23,7 @@ model User {
   role      String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  deleted_at DateTime 
+  deleted_at DateTime? 
 
   @@map("users")
 }
