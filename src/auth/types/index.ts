@@ -1,9 +1,4 @@
-import { GetUserOutput } from "./user.types";
-
-export interface SignInInput {
-    email: string;
-    password: string;
-}
+import { GetUserOutput } from "src/user/types";
 
 export interface SignInOutput {
     access_token: string;
