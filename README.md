@@ -45,6 +45,9 @@ npx prisma generate
 
 # Rodar as migrações (sincronizar banco)
 npx prisma migrate dev
+
+# Popular o banco com dados iniciais (Seed)
+npx prisma db seed
 ```
 
 ## Executando a Aplicação
@@ -84,4 +87,10 @@ npx prisma migrate dev
 
 ```bash
 npx prisma generate
+```
+
+## 4. Popular o banco com dados iniciais (Seed)
+
+```bash
+npx prisma db seed
 ```
