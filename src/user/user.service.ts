@@ -1,46 +1,52 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { hash_password } from "src/libs/utils";
-import { PrismaService } from "src/prisma.service";
-import { CreateUserOutput, GetUserInput, GetUserOutput } from "src/user/types";
-import { CreateUserDto } from "./dto/user.dto";
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { hash_password } from 'src/libs/utils';
+import { PrismaService } from 'src/prisma.service';
+import { CreateUserOutput, GetUserInput, GetUserOutput } from 'src/user/types';
+import { CreateUserDto } from './dto/user.dto';
 
 @Injectable()
 export class UserService {
-    constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
-    async createUser({ name, email, cpf, password, role }: CreateUserDto): Promise<CreateUserOutput> {
-        const data = {
-            name,
-            email,
-            cpf,
-            password: await hash_password(password),
-            role,
-        }
+  async createUser({
+    name,
+    email,
+    cpf,
+    password,
+    role,
+  }: CreateUserDto): Promise<CreateUserOutput> {
+    const data = {
+      name,
+      email,
+      cpf,
+      password: await hash_password(password),
+      role,
+    };
 
-        const user = await this.prisma.user.create({ data });
-        return { id: user.id };
+    const user = await this.prisma.user.create({ data });
+    return { id: user.id };
+  }
+
+  async listUsers(): Promise<GetUserOutput[]> {
+    return await this.prisma.user.findMany();
+  }
+
+  async getUser({ id }: GetUserInput): Promise<GetUserOutput> {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
     }
 
-    async listUsers(): Promise<GetUserOutput[]> {
-        return await this.prisma.user.findMany();
-    }
+    const { password, ...result } = user;
+    return result as GetUserOutput;
+  }
 
-    async getUser({ id }: GetUserInput): Promise<GetUserOutput> {
-        const user = await this.prisma.user.findUnique({
-            where: { id },
-        });
-
-        if (!user) {
-            throw new NotFoundException("User not found");
-        }
-
-        const { password, ...result } = user;
-        return result as GetUserOutput;
-    }
-
-    async findByEmail(email: string) {
-        return await this.prisma.user.findFirst({
-            where: { email },
-        });
-    }
+  async findByEmail(email: string) {
+    return await this.prisma.user.findFirst({
+      where: { email },
+    });
+  }
 }
