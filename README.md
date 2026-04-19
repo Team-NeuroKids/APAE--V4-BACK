@@ -15,7 +15,7 @@ Siga os passos abaixo para rodar o projeto localmente:
 
 ### 1. Clonar o repositório
 ```bash
-git clone -b feat/nest-setup <url-do-repositorio>
+git clone <url-do-repositorio>
 cd APAE--V4-BACK
 ```
 
