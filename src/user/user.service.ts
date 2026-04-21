@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { hash_password } from 'src/libs/utils';
+import { hash_password } from 'src/common/utils';
 import { PrismaService } from 'src/prisma.service';
 import { CreateUserOutput, GetUserInput, GetUserOutput } from 'src/user/types';
 import { CreateUserDto } from './dto/user.dto';

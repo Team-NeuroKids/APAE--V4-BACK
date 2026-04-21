@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
 import { SignInOutput } from 'src/auth/types';
-import { compare_password } from 'src/libs/utils';
+import { compare_password } from 'src/common/utils';
 import { SignInDto } from './dto/auth.dto';
 import { GetUserOutput } from 'src/user/types';
 
