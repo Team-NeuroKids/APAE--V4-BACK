@@ -14,15 +14,101 @@ datasource db {
 }
 
 model User {
-  id        String @id @default(cuid(2))
-  name      String
-  email     String @unique
-  cpf       String @unique
-  password  String
-  role      String
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  deleted_at DateTime? 
+  id       String @id @default(cuid(2))
+  name     String
+  email    String @unique
+  cpf      String @unique
+  password String
+  role     String
+
+  patient_links UserChild[]
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
 
   @@map("users")
+}
+
+model Child {
+  id         String   @id @default(cuid(2))
+  name       String
+  birth_date DateTime
+  diagnosis  String?
+  avatar_url String?
+
+  responsible_links UserChild[]
+
+  sessions       Session[]
+  game_histories GameHistory[]
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+
+  @@map("children")
+}
+
+model UserChild {
+  id       String @id @default(cuid(2))
+  user_id  String
+  child_id String
+
+  assigned_at DateTime @default(now())
+
+  user  User  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  child Child @relation(fields: [child_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, child_id])
+  @@map("user_children")
+}
+
+model Game {
+  id          String  @id @default(cuid(2))
+  title       String
+  description String?
+  thumbnail   String?
+
+  game_histories GameHistory[]
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+
+  @@map("games")
+}
+
+model Session {
+  id           String @id @default(cuid(2))
+  child_id     String
+  opened_by_id String
+
+  child Child @relation(fields: [child_id], references: [id])
+
+  game_histories GameHistory[]
+
+  created_at DateTime @default(now())
+
+  @@map("sessions")
+}
+
+model GameHistory {
+  id         String @id @default(cuid(2))
+  session_id String
+  child_id   String
+  game_id    String
+
+  score           Int     @default(0)
+  correct_answers Int     @default(0)
+  wrong_answers   Int     @default(0)
+  time_spent      Int?
+  observations    String? @db.Text
+
+  session Session @relation(fields: [session_id], references: [id], onDelete: Cascade)
+  child   Child   @relation(fields: [child_id], references: [id], onDelete: Cascade)
+  game    Game    @relation(fields: [game_id], references: [id], onDelete: Cascade)
+
+  created_at DateTime @default(now())
+
+  @@map("game_histories")
 }
