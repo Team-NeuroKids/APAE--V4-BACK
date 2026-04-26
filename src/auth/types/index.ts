@@ -1,3 +1,4 @@
+import { UserRole } from 'src/common/enums/roles.enum';
 import { GetUserOutput } from 'src/user/types';
 
 export interface SignInOutput {
@@ -8,5 +9,5 @@ export interface SignInOutput {
 export interface JwtPayload {
   sub: string;
   email: string;
-  role: string;
+  role: UserRole;
 }
