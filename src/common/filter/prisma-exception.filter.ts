@@ -21,36 +21,37 @@ export class PrismaExceptionFilter implements ExceptionFilter {
       case 'P2002': // Unique constraint failed
         status = HttpStatus.CONFLICT;
         message =
-          'Unique constraint failed. A record with this value already exists.';
+          'Falha na restrição exclusiva. Um registro com este valor já existe.';
         break;
 
       case 'P2025': // Record not found
       case 'P2001':
         status = HttpStatus.NOT_FOUND;
-        message = 'Record not found. The requested resource does not exist.';
+        message = 'Registro não encontrado. O recurso solicitado não existe.';
         break;
 
       case 'P2003': // Foreign key constraint failed
         status = HttpStatus.UNPROCESSABLE_ENTITY;
         message =
-          'Foreign key constraint failed. Invalid reference to a related record.';
+          'Falha na restrição de chave estrangeira. Referência inválida a um registro relacionado.';
         break;
 
       case 'P2000': // Value too long
         status = HttpStatus.BAD_REQUEST;
-        message = 'The provided value is too long for this column.';
+        message = 'O valor fornecido é muito longo para esta coluna.';
         break;
 
       case 'P2006': // Invalid value
       case 'P2011': // Null constraint violation
       case 'P2014': // Relation violation
         status = HttpStatus.BAD_REQUEST;
-        message = 'Data validation failed. Please check the provided fields.';
+        message =
+          'A validação de dados falhou. Verifique os campos fornecidos.';
         break;
 
       default:
         status = HttpStatus.INTERNAL_SERVER_ERROR;
-        message = `Database Error: ${exception.message.replace(/\n/g, ' ')}`;
+        message = `Erro no banco de dados: ${exception.message.replace(/\n/g, ' ')}`;
         break;
     }
 

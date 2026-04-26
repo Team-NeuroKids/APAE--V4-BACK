@@ -25,7 +25,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
     if (!user) {
       throw new UnauthorizedException(
-        'User account is deactivated or does not exist',
+        'A conta de usuário está desativada ou não existe',
       );
     }
     return { id: payload.sub, email: payload.email, role: payload.role };

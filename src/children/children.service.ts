@@ -52,7 +52,7 @@ export class ChildrenService {
     });
 
     if (!child)
-      throw new NotFoundException('Patient not found or access denied');
+      throw new NotFoundException('Paciente não encontrado ou acesso negado');
     return child;
   }
 
@@ -109,11 +109,11 @@ export class ChildrenService {
       select: { id: true, responsible_links: { where: { user_id: userId } } },
     });
 
-    if (!child) throw new NotFoundException('Child not found');
+    if (!child) throw new NotFoundException('Criança não encontrada');
 
     if (child.responsible_links.length === 0) {
       throw new ForbiddenException(
-        'Access denied: You are not assigned to this child',
+        'Acesso negado: Você não está atribuído a esta criança',
       );
     }
   }
