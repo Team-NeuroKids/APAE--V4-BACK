@@ -6,13 +6,14 @@ import { AuthController } from './auth.controller';
 import { UserModule } from 'src/user/user.module';
 import { JwtStrategy } from './jwt.strategy';
 import { PrismaService } from 'prisma/prisma.service';
+import { env } from 'src/common/config/env.config';
 
 @Module({
   imports: [
     UserModule,
     PassportModule,
     JwtModule.register({
-      secret: process.env.JWT_SECRET || 'secret',
+      secret: env.JWT_SECRET,
       signOptions: { expiresIn: '1d' },
     }),
   ],
@@ -20,4 +21,4 @@ import { PrismaService } from 'prisma/prisma.service';
   controllers: [AuthController],
   exports: [AuthService],
 })
-export class AuthModule {}
+export class AuthModule { }

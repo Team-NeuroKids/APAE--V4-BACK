@@ -1,7 +1,8 @@
 import { hash, compare } from 'bcryptjs';
+import { env } from './config/env.config';
 
 export async function hash_password(password: string): Promise<string> {
-  return await hash(password, 10);
+  return await hash(password, env.BCRYPT_ROUNDS);
 }
 
 export async function compare_password(
