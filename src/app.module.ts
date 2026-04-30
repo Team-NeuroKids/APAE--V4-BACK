@@ -4,7 +4,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ChildrenModule } from './children/children.module';
 import { LoggerModule } from 'nestjs-pino';
-import { getLoggerConfig } from './config/logger.config';
+import { getLoggerConfig } from './common/config/logger.config';
 
 @Module({
   imports: [

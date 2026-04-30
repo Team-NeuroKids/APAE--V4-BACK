@@ -1,7 +1,7 @@
 import { Params } from 'nestjs-pino';
 import { randomUUID } from 'crypto';
 import { ConfigService } from '@nestjs/config';
-import { JwtPayload } from '../auth/types';
+import { JwtPayload } from '../../auth/types';
 
 export const getLoggerConfig = (configService: ConfigService): Params => {
   const isProduction = configService.get<string>('NODE_ENV') === 'production';
