@@ -1,12 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { hash_password } from 'src/common/utils';
+import { UtilsService } from 'src/common/utils.service';
 import { PrismaService } from 'src/prisma.service';
 import { CreateUserOutput, GetUserInput, GetUserOutput } from 'src/user/types';
 import { CreateUserDto } from './dto/user.dto';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly utils: UtilsService
+  ) { }
 
   async createUser({
     name,
@@ -19,7 +22,7 @@ export class UserService {
       name,
       email,
       cpf,
-      password: await hash_password(password),
+      password: await this.utils.hash_password(password),
       role,
     };
 
