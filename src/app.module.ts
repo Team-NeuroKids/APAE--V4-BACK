@@ -5,10 +5,13 @@ import { AuthModule } from './auth/auth.module';
 import { ChildrenModule } from './children/children.module';
 import { LoggerModule } from 'nestjs-pino';
 import { getLoggerConfig } from './common/config/logger.config';
+import { CommonModule } from './common/common.module';
+import { validate } from './common/config/env.validation'
 
 @Module({
   imports: [
     ConfigModule.forRoot({
+      validate,
       isGlobal: true,
     }),
     LoggerModule.forRootAsync({
@@ -16,6 +19,7 @@ import { getLoggerConfig } from './common/config/logger.config';
       inject: [ConfigService],
       useFactory: getLoggerConfig,
     }),
+    CommonModule,
     UserModule,
     AuthModule,
     ChildrenModule,
@@ -23,4 +27,4 @@ import { getLoggerConfig } from './common/config/logger.config';
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }
