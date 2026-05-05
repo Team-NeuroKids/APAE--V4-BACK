@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { utilsService } from 'src/common/utils.service';
+import { UtilsService } from 'src/common/utils.service';
 import { PrismaService } from 'src/prisma.service';
 import { CreateUserOutput, GetUserInput, GetUserOutput } from 'src/user/types';
 import { CreateUserDto } from './dto/user.dto';
@@ -8,7 +8,7 @@ import { CreateUserDto } from './dto/user.dto';
 export class UserService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly utils: utilsService
+    private readonly utils: UtilsService
   ) { }
 
   async createUser({
