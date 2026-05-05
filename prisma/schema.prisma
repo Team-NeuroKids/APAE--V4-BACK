@@ -42,9 +42,10 @@ model Child {
   sessions       Session[]
   game_histories GameHistory[]
 
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
   deleted_at DateTime?
+  actionLogs ActionLog[]
 
   @@map("children")
 }
@@ -87,7 +88,8 @@ model Session {
 
   game_histories GameHistory[]
 
-  created_at DateTime @default(now())
+  created_at DateTime    @default(now())
+  actionLogs ActionLog[]
 
   @@map("sessions")
 }
@@ -111,4 +113,42 @@ model GameHistory {
   created_at DateTime @default(now())
 
   @@map("game_histories")
+}
+
+model ActionCard {
+  id        String @id @default(cuid(2))
+  label     String
+  image_url String
+  audio_url String
+
+  action_logs ActionLog[]
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+
+  @@map("action_cards")
+}
+
+model ActionLog {
+  id             String @id @default(cuid(2))
+  session_id     String
+  child_id       String
+  action_card_id String
+
+  click_count     Int      @default(1)
+  recorded_minute DateTime
+
+  session     Session    @relation(fields: [session_id], references: [id], onDelete: Cascade)
+  child       Child      @relation(fields: [child_id], references: [id], onDelete: Cascade)
+  action_card ActionCard @relation(fields: [action_card_id], references: [id], onDelete: Cascade)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@unique([session_id, child_id, action_card_id, recorded_minute], name: "unique_log_minute")
+  @@index([child_id])
+  @@index([session_id])
+  @@index([recorded_minute])
+  @@map("action_logs")
 }
