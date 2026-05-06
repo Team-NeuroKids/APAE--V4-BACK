@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -17,6 +18,8 @@ import type { JwtPayload } from 'src/auth/types';
 import { UpdateChildDto } from './dto/update-child.dto';
 import { ChildResponseDto } from './dto/child-response.dto';
 import { ChildrenService } from './children.service';
+import { ListChildsRequestDto } from './dto/list-childs-request.dto';
+import { PaginatedChildsResponseDto } from './dto/list-childs-response.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('children')
@@ -38,18 +41,25 @@ export class ChildrenController {
 
   @Roles(UserRole.ADMIN)
   @Get()
-  async getChildren(): Promise<ChildResponseDto[]> {
-    const children = await this.childrenService.getChildren();
-    return children.map((child) => new ChildResponseDto(child));
+  async getChildren(@Query() query: ListChildsRequestDto): Promise<PaginatedChildsResponseDto> {
+    const { data, meta } = await this.childrenService.getChildren(query);
+    return {
+      data: data.map((child) => new ChildResponseDto(child)),
+      meta,
+    };
   }
 
   @Roles(UserRole.DOCTOR, UserRole.CAREGIVER)
   @Get('/me')
   async getChildrenByUser(
     @GetUser() user: JwtPayload,
-  ): Promise<ChildResponseDto[]> {
-    const children = await this.childrenService.getChildrenByUserId(user.sub);
-    return children.map((child) => new ChildResponseDto(child));
+    @Query() query: ListChildsRequestDto,
+  ): Promise<PaginatedChildsResponseDto> {
+    const { data, meta } = await this.childrenService.getChildrenByUserId(user.sub, query);
+    return {
+      data: data.map((child) => new ChildResponseDto(child)),
+      meta,
+    };
   }
 
   @Roles(UserRole.DOCTOR, UserRole.CAREGIVER)
