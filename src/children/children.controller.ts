@@ -41,7 +41,9 @@ export class ChildrenController {
 
   @Roles(UserRole.ADMIN)
   @Get()
-  async getChildren(@Query() query: ListChildsRequestDto): Promise<PaginatedChildsResponseDto> {
+  async getChildren(
+    @Query() query: ListChildsRequestDto,
+  ): Promise<PaginatedChildsResponseDto> {
     const { data, meta } = await this.childrenService.getChildren(query);
     return {
       data: data.map((child) => new ChildResponseDto(child)),
@@ -55,7 +57,10 @@ export class ChildrenController {
     @GetUser() user: JwtPayload,
     @Query() query: ListChildsRequestDto,
   ): Promise<PaginatedChildsResponseDto> {
-    const { data, meta } = await this.childrenService.getChildrenByUserId(user.sub, query);
+    const { data, meta } = await this.childrenService.getChildrenByUserId(
+      user.sub,
+      query,
+    );
     return {
       data: data.map((child) => new ChildResponseDto(child)),
       meta,

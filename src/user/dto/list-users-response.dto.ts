@@ -1,11 +1,11 @@
-import { GetUserOutput } from "../types";
+import { GetUserOutput } from '../types';
 
 class PaginationMetaDto {
-    nextCursor: string | null;
-    hasNextPage: boolean;
+  nextCursor: string | null;
+  hasNextPage: boolean;
 }
 
 export class PaginatedUsersResponseDto {
-    data: GetUserOutput[];
-    meta: PaginationMetaDto;
+  data: GetUserOutput[];
+  meta: PaginationMetaDto;
 }

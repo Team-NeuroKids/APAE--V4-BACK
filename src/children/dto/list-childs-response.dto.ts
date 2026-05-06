@@ -1,11 +1,11 @@
-import { ChildResponseDto } from "./child-response.dto";
+import { ChildResponseDto } from './child-response.dto';
 
 class PaginationMetaDto {
-    nextCursor: string | null;
-    hasNextPage: boolean;
+  nextCursor: string | null;
+  hasNextPage: boolean;
 }
 
 export class PaginatedChildsResponseDto {
-    data: ChildResponseDto[];
-    meta: PaginationMetaDto;
+  data: ChildResponseDto[];
+  meta: PaginationMetaDto;
 }
