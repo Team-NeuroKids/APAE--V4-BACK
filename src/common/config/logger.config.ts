@@ -10,7 +10,7 @@ export const getLoggerConfig = (configService: ConfigService): Params => {
     pinoHttp: {
       redact: {
         paths: ['req.headers.authorization', 'req.body.password'],
-        censor: '[CENSURADO_POR_SEGURANCA]',
+        censor: '[BLOCKED]',
       },
       genReqId: (req) => req.headers['x-request-id'] || randomUUID(),
       customProps: (req: any) => {
