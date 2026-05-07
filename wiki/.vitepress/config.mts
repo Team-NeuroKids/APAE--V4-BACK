@@ -10,10 +10,19 @@ export default defineConfig({
       { text: 'Home', link: '/' },
       { text: 'Arquitetura', link: '/architecture/database' },
       { text: 'Módulos', link: '/modules/users' },
-      { text: 'Contribuição', link: '/contributing' }
+      { text: 'Features', link: '/docs/features' },
+      { text: 'Changelog', link: '/docs/changelog' },
+      { text: 'Contribuição', link: '/docs/contributing' }
     ],
 
     sidebar: [
+      {
+        text: 'Planejamento',
+        items: [
+          { text: 'Features Ideias', link: '/docs/features' },
+          { text: 'Changelog', link: '/docs/changelog' }
+        ]
+      },
       {
         text: 'Arquitetura',
         items: [
@@ -30,9 +39,21 @@ export default defineConfig({
         ]
       },
       {
+        text: 'Features',
+        items: [
+          { text: "Adições Futuras", link: '/docs/features' }
+        ]
+      },
+      {
+        text: 'Changelog',
+        items: [
+          { text: "Atualizaçoes", link: '/docs/changelog' }
+        ]
+      },
+      {
         text: 'Contribuição',
         items: [
-          { text: 'Como Contribuir', link: '/contributing' }
+          { text: 'Como Contribuir', link: '/docs/contributing' }
         ]
       }
     ],
