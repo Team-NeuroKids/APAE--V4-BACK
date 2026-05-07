@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
 import { SignInOutput } from 'src/auth/types';
-import { compare_password } from 'src/common/utils';
+import { UtilsService } from 'src/common/utils.service';
 import { SignInDto } from './dto/auth.dto';
 import { GetUserOutput } from 'src/user/types';
 
@@ -11,7 +11,8 @@ export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
-  ) {}
+    private readonly utils: UtilsService,
+  ) { }
 
   async signIn({ email, password }: SignInDto): Promise<SignInOutput> {
     const user = await this.userService.findByEmail(email);
@@ -20,7 +21,7 @@ export class AuthService {
       throw new UnauthorizedException('Credenciais inválidas');
     }
 
-    const isPasswordValid = await compare_password(password, user.password);
+    const isPasswordValid = await this.utils.compare_password(password, user.password);
 
     if (!isPasswordValid) {
       throw new UnauthorizedException('Credenciais inválidas');
