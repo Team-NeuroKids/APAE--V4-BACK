@@ -1,5 +1,5 @@
 import { Params } from 'nestjs-pino';
-import { randomUUID } from 'crypto';
+import { randomUUID } from 'node:crypto';
 import { ConfigService } from '@nestjs/config';
 import { JwtPayload } from '../../auth/types';
 
@@ -16,8 +16,8 @@ export const getLoggerConfig = (configService: ConfigService): Params => {
       customProps: (req: any) => {
         const user = req.user as JwtPayload;
         return {
-          userId: user?.sub || 'anonimo',
-          userRole: user?.role || 'nenhuma',
+          userId: user?.sub || 'anonymous',
+          userRole: user?.role || 'none',
         };
       },
       transport: !isProduction
