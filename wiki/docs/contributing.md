@@ -9,8 +9,6 @@ Antes de começar, você precisará ter instalado em sua máquina:
 - [NPM](https://www.npmjs.com/)
 - [Docker](https://www.docker.com/) e [Docker Compose](https://docs.docker.com/compose/)
 
----
-
 ## Configuração Local
 
 Siga os passos abaixo para rodar o projeto localmente:
@@ -54,18 +52,42 @@ npx prisma migrate dev
 npx prisma db seed
 ```
 
----
-
 ## Executando a Aplicação
 
 Para iniciar o servidor em modo de desenvolvimento (com hot-reload):
 ```bash
 npm run start:dev
 ```
-
 A aplicação estará disponível em `http://localhost:3000` (ou na porta configurada).
 
----
+## Fluxo de Trabalho (Git)
+
+Siga este fluxo para realizar suas alterações e integrá-las ao projeto:
+
+### 1. Criar uma nova Branch
+Sempre crie uma nova branch a partir da `develop` para suas alterações:
+```bash
+git checkout develop
+git pull origin develop
+git checkout -b feature/nome-da-sua-feature
+# ou
+git checkout -b fix/nome-do-seu-ajuste
+```
+
+### 2. Commitar e Subir Alterações
+Após realizar suas alterações, faça o commit e o push para o repositório remoto:
+```bash
+git add .
+git commit -m "feat: descrição curta da alteração"
+git push origin feature/nome-da-sua-feature
+```
+
+### 3. Abrir um Pull Request (PR)
+Ao abrir o Pull Request no GitHub:
+
+> [!IMPORTANT]
+> **ATENÇÃO:** Certifique-se de que o destino (base branch) do seu Pull Request seja para **`TEAM-NEUROKIDS/develop`**.
+> Nunca abra PRs diretamente para a branch `main` a menos que seja uma release oficial.
 
 ## Outros Comandos Úteis
 
