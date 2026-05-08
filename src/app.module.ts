@@ -4,7 +4,8 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ChildrenModule } from './children/children.module';
 import { CommonModule } from './common/common.module';
-import { validate } from './common/config/env.validation';
+import { validate } from './common/config/env.validation'
+import { GameModule } from './game/game.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { validate } from './common/config/env.validation';
     UserModule,
     AuthModule,
     ChildrenModule,
+    GameModule,
   ],
   controllers: [],
   providers: [],

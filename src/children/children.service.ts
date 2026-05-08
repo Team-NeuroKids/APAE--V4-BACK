@@ -12,7 +12,7 @@ import { PaginatedChildsResponseDto } from './dto/list-childs-response.dto';
 
 @Injectable()
 export class ChildrenService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async createChild(
     createChildDto: CreateChildDto,
@@ -33,25 +33,19 @@ export class ChildrenService {
     });
   }
 
-  async getChildren({
-    take,
-    cursor,
-    search,
-  }: ListChildsRequestDto): Promise<PaginatedChildsResponseDto> {
+  async getChildren({ take, cursor, search }: ListChildsRequestDto): Promise<PaginatedChildsResponseDto> {
     const children = await this.prisma.child.findMany({
       take: take + 1,
       skip: cursor ? 1 : 0,
       cursor: cursor ? { id: cursor } : undefined,
       where: {
         deleted_at: null,
-        ...(search
-          ? {
-              name: {
-                contains: search,
-                mode: 'insensitive',
-              },
-            }
-          : {}),
+        ...(search ? {
+          name: {
+            contains: search,
+            mode: 'insensitive',
+          }
+        } : {}),
       },
       include: {
         responsible_links: true,
@@ -85,10 +79,7 @@ export class ChildrenService {
     return child;
   }
 
-  async getChildrenByUserId(
-    userId: string,
-    { take, cursor, search }: ListChildsRequestDto,
-  ): Promise<PaginatedChildsResponseDto> {
+  async getChildrenByUserId(userId: string, { take, cursor, search }: ListChildsRequestDto): Promise<PaginatedChildsResponseDto> {
     const children = await this.prisma.child.findMany({
       take: take + 1,
       skip: cursor ? 1 : 0,
@@ -100,14 +91,12 @@ export class ChildrenService {
             user_id: userId,
           },
         },
-        ...(search
-          ? {
-              name: {
-                contains: search,
-                mode: 'insensitive',
-              },
-            }
-          : {}),
+        ...(search ? {
+          name: {
+            contains: search,
+            mode: 'insensitive',
+          }
+        } : {}),
       },
       include: {
         responsible_links: true,

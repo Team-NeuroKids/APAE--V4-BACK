@@ -32,26 +32,20 @@ export class UserService {
     return { id: user.id };
   }
 
-  async listUsers({
-    take,
-    cursor,
-    search,
-  }: ListUsersRequestDto): Promise<PaginatedUsersResponseDto> {
+  async listUsers({ take, cursor, search }: ListUsersRequestDto): Promise<PaginatedUsersResponseDto> {
     const users = await this.prisma.user.findMany({
       take: take + 1,
       skip: cursor ? 1 : 0,
       cursor: cursor ? { id: cursor } : undefined,
       where: {
         deleted_at: null,
-        ...(search
-          ? {
-              OR: [
-                { name: { contains: search, mode: 'insensitive' } },
-                { email: { contains: search, mode: 'insensitive' } },
-                { cpf: { contains: search, mode: 'insensitive' } },
-              ],
-            }
-          : {}),
+        ...(search ? {
+          OR: [
+            { name: { contains: search, mode: 'insensitive' } },
+            { email: { contains: search, mode: 'insensitive' } },
+            { cpf: { contains: search, mode: 'insensitive' } },
+          ],
+        } : {}),
       },
     });
 

@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  Query,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/user.dto';
 import type {
@@ -33,9 +25,7 @@ export class UserController {
   }
 
   @Get()
-  async listUsers(
-    @Query() query: ListUsersRequestDto,
-  ): Promise<PaginatedUsersResponseDto> {
+  async listUsers(@Query() query: ListUsersRequestDto): Promise<PaginatedUsersResponseDto> {
     return await this.userService.listUsers(query);
   }
 
