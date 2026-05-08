@@ -7,10 +7,12 @@ import { PrismaService } from 'prisma/prisma.service';
 import { CreateChildDto } from './dto/create-child.dto';
 import { Child } from '@prisma/client';
 import { UpdateChildDto } from './dto/update-child.dto';
+import { ListChildsRequestDto } from './dto/list-childs-request.dto';
+import { PaginatedChildsResponseDto } from './dto/list-childs-response.dto';
 
 @Injectable()
 export class ChildrenService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async createChild(
     createChildDto: CreateChildDto,
@@ -31,15 +33,36 @@ export class ChildrenService {
     });
   }
 
-  async getChildren(): Promise<Child[]> {
-    return this.prisma.child.findMany({
+  async getChildren({ take, cursor, search }: ListChildsRequestDto): Promise<PaginatedChildsResponseDto> {
+    const children = await this.prisma.child.findMany({
+      take: take + 1,
+      skip: cursor ? 1 : 0,
+      cursor: cursor ? { id: cursor } : undefined,
       where: {
         deleted_at: null,
+        ...(search ? {
+          name: {
+            contains: search,
+            mode: 'insensitive',
+          }
+        } : {}),
       },
       include: {
         responsible_links: true,
       },
     });
+
+    const hasNextPage = children.length > take;
+    const data = hasNextPage ? children.slice(0, take) : children;
+    const nextCursor = hasNextPage ? data[data.length - 1].id : null;
+
+    return {
+      data,
+      meta: {
+        nextCursor,
+        hasNextPage,
+      },
+    };
   }
 
   async getChildById(id: string, userId: string): Promise<Child> {
@@ -56,16 +79,41 @@ export class ChildrenService {
     return child;
   }
 
-  async getChildrenByUserId(userId: string): Promise<Child[]> {
-    return this.prisma.child.findMany({
+  async getChildrenByUserId(userId: string, { take, cursor, search }: ListChildsRequestDto): Promise<PaginatedChildsResponseDto> {
+    const children = await this.prisma.child.findMany({
+      take: take + 1,
+      skip: cursor ? 1 : 0,
+      cursor: cursor ? { id: cursor } : undefined,
       where: {
+        deleted_at: null,
         responsible_links: {
           some: {
             user_id: userId,
           },
         },
+        ...(search ? {
+          name: {
+            contains: search,
+            mode: 'insensitive',
+          }
+        } : {}),
+      },
+      include: {
+        responsible_links: true,
       },
     });
+
+    const hasNextPage = children.length > take;
+    const data = hasNextPage ? children.slice(0, take) : children;
+    const nextCursor = hasNextPage ? data[data.length - 1].id : null;
+
+    return {
+      data,
+      meta: {
+        nextCursor,
+        hasNextPage,
+      },
+    };
   }
 
   async updateChild(
