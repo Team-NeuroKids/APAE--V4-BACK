@@ -11,8 +11,8 @@ export default defineConfig({
       { text: 'Arquitetura', link: '/architecture/database' },
       { text: 'Módulos', link: '/modules/users' },
       { text: 'Features', link: '/docs/features' },
-      { text: 'Changelog', link: '/docs/changelog' },
-      { text: 'Contribuição', link: '/docs/contributing' }
+      { text: 'Contribuição', link: '/docs/contributing' },
+      { text: 'Changelog', link: '/docs/changelog' }
     ],
 
     sidebar: [
@@ -45,15 +45,15 @@ export default defineConfig({
         ]
       },
       {
-        text: 'Changelog',
-        items: [
-          { text: "Atualizaçoes", link: '/docs/changelog' }
-        ]
-      },
-      {
         text: 'Contribuição',
         items: [
           { text: 'Como Contribuir', link: '/docs/contributing' }
+        ]
+      },
+      {
+        text: 'Changelog',
+        items: [
+          { text: "Atualizaçoes", link: '/docs/changelog' }
         ]
       }
     ],

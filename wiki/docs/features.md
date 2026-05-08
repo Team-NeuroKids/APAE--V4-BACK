@@ -25,3 +25,6 @@ Utilizar os dados históricos para otimizar o tratamento.
 Suporte para múltiplas sedes.
 - Isolamento de dados entre diferentes unidades da APAE.
 - Gestão centralizada para administradores globais.
+
+## 6. Audio de backup
+Adicionar aúdios de backup no frontend caso o TTS falhe.

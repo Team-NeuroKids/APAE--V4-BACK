@@ -13,6 +13,16 @@ Acompanhamento de todas as mudanças e versões do sistema **APAE V4**.
 ### 🧹 Melhorias
 -->
 
+## 4.2.0 - 07/05/2026
+
+**Resumo do Sistema**:
+
+### 📚 Documentação
+- **Instruções para IA**: Adição de regras e convençãoes de código para a IA seguir em `.agent/rules`
+
+### 🚀 Novidades
+- **Sessões**: Acompanhamento de sessões em tempo real via Gateway Websocket, permitindo receber informações do uso da plataforma pelas crianças ao Vivo
+
 ## 4.1.0 - 06/05/2026
 
 **Resumo do Sistema**:
