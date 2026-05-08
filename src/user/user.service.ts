@@ -10,8 +10,8 @@ import { PaginatedUsersResponseDto } from './dto/list-users-response.dto';
 export class UserService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly utils: UtilsService
-  ) { }
+    private readonly utils: UtilsService,
+  ) {}
 
   async createUser({
     name,
