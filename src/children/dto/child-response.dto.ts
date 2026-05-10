@@ -11,6 +11,9 @@ export class ChildResponseDto {
   updated_at: Date;
 
   @Exclude()
+  cpf: string;
+
+  @Exclude()
   deleted_at: Date | null;
 
   constructor(partial: Partial<ChildResponseDto>) {

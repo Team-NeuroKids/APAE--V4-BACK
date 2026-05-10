@@ -22,10 +22,7 @@ export class ChildrenService {
   ): Promise<Child> {
     return this.prisma.child.create({
       data: {
-        name: createChildDto.name,
-        birth_date: createChildDto.birthDate,
-        diagnosis: createChildDto.diagnosis,
-        avatar_url: createChildDto.avatarUrl,
+        ...createChildDto,
         responsible_links: {
           create: {
             user_id: userId,
@@ -196,14 +193,19 @@ export class ChildrenService {
     childId: string,
     caregiverId: string,
     userId: string,
-  ) {
+  ): Promise<Child> {
     await this.validateOwnership(childId, userId);
 
-    return this.prisma.userChild.delete({
-      where: {
-        user_id_child_id: {
-          user_id: caregiverId,
-          child_id: childId,
+    return this.prisma.child.update({
+      where: { id: childId },
+      data: {
+        responsible_links: {
+          delete: {
+            user_id_child_id: {
+              user_id: caregiverId,
+              child_id: childId,
+            },
+          },
         },
       },
     });

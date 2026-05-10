@@ -1,4 +1,10 @@
-import { IsDate, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsDate,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Length,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateChildDto {
@@ -6,10 +12,15 @@ export class CreateChildDto {
   @IsNotEmpty()
   name: string;
 
+  @Length(11, 14)
+  @IsString()
+  @IsNotEmpty()
+  cpf: string;
+
   @IsDate()
   @Type(() => Date)
   @IsNotEmpty()
-  birthDate: Date;
+  birth_date: Date;
 
   @IsString()
   @IsOptional()
@@ -17,5 +28,5 @@ export class CreateChildDto {
 
   @IsString()
   @IsOptional()
-  avatarUrl?: string;
+  avatar_url?: string;
 }

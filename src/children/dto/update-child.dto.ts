@@ -1,4 +1,5 @@
-import { IsOptional, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsDate, IsOptional, IsString, Length } from 'class-validator';
 
 export class UpdateChildDto {
   @IsOptional()
@@ -7,13 +8,19 @@ export class UpdateChildDto {
 
   @IsOptional()
   @IsString()
-  birthDate?: string;
+  @Length(11, 14)
+  cpf?: string;
 
   @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  birth_date?: Date;
+
   @IsString()
+  @IsOptional()
   diagnosis?: string;
 
-  @IsOptional()
   @IsString()
-  avatarUrl?: string;
+  @IsOptional()
+  avatar_url?: string;
 }
