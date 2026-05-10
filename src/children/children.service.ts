@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -9,10 +10,11 @@ import { Child } from '@prisma/client';
 import { UpdateChildDto } from './dto/update-child.dto';
 import { ListChildsRequestDto } from './dto/list-childs-request.dto';
 import { PaginatedChildsResponseDto } from './dto/list-childs-response.dto';
+import { UserRole } from 'src/common/enums/roles.enum';
 
 @Injectable()
 export class ChildrenService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async createChild(
     createChildDto: CreateChildDto,
@@ -33,19 +35,25 @@ export class ChildrenService {
     });
   }
 
-  async getChildren({ take, cursor, search }: ListChildsRequestDto): Promise<PaginatedChildsResponseDto> {
+  async getChildren({
+    take,
+    cursor,
+    search,
+  }: ListChildsRequestDto): Promise<PaginatedChildsResponseDto> {
     const children = await this.prisma.child.findMany({
       take: take + 1,
       skip: cursor ? 1 : 0,
       cursor: cursor ? { id: cursor } : undefined,
       where: {
         deleted_at: null,
-        ...(search ? {
-          name: {
-            contains: search,
-            mode: 'insensitive',
-          }
-        } : {}),
+        ...(search
+          ? {
+              name: {
+                contains: search,
+                mode: 'insensitive',
+              },
+            }
+          : {}),
       },
       include: {
         responsible_links: true,
@@ -79,7 +87,10 @@ export class ChildrenService {
     return child;
   }
 
-  async getChildrenByUserId(userId: string, { take, cursor, search }: ListChildsRequestDto): Promise<PaginatedChildsResponseDto> {
+  async getChildrenByUserId(
+    userId: string,
+    { take, cursor, search }: ListChildsRequestDto,
+  ): Promise<PaginatedChildsResponseDto> {
     const children = await this.prisma.child.findMany({
       take: take + 1,
       skip: cursor ? 1 : 0,
@@ -91,12 +102,14 @@ export class ChildrenService {
             user_id: userId,
           },
         },
-        ...(search ? {
-          name: {
-            contains: search,
-            mode: 'insensitive',
-          }
-        } : {}),
+        ...(search
+          ? {
+              name: {
+                contains: search,
+                mode: 'insensitive',
+              },
+            }
+          : {}),
       },
       include: {
         responsible_links: true,
@@ -147,6 +160,51 @@ export class ChildrenService {
       where: { id },
       data: {
         deleted_at: null,
+      },
+    });
+  }
+
+  async addCaregiverToChild(
+    childId: string,
+    caregiverId: string,
+    userId: string,
+  ): Promise<Child> {
+    await this.validateOwnership(childId, userId);
+
+    const user = await this.prisma.user.findUniqueOrThrow({
+      where: { id: caregiverId },
+      select: { id: true, role: true },
+    });
+
+    if ((user.role as UserRole) !== UserRole.CAREGIVER) {
+      throw new BadRequestException('O usuário deve ser um responsável');
+    }
+
+    return await this.prisma.child.update({
+      where: { id: childId },
+      data: {
+        responsible_links: {
+          create: {
+            user_id: caregiverId,
+          },
+        },
+      },
+    });
+  }
+
+  async removeCaregiverFromChild(
+    childId: string,
+    caregiverId: string,
+    userId: string,
+  ) {
+    await this.validateOwnership(childId, userId);
+
+    return this.prisma.userChild.delete({
+      where: {
+        user_id_child_id: {
+          user_id: caregiverId,
+          child_id: childId,
+        },
       },
     });
   }

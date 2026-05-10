@@ -21,6 +21,7 @@ import { ChildrenService } from './children.service';
 import { ListChildsRequestDto } from './dto/list-childs-request.dto';
 import { PaginatedChildsResponseDto } from './dto/list-childs-response.dto';
 import { RolesGuard } from 'src/common/guards/roles.guard';
+import { AddCaregiverToChildDto } from './dto/add-caregiver-to-child.dto';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('children')
@@ -107,6 +108,38 @@ export class ChildrenController {
   @Post(':id/restore')
   async restoreChild(@Param('id') id: string): Promise<ChildResponseDto> {
     const child = await this.childrenService.restoreChild(id);
+    return new ChildResponseDto(child);
+  }
+
+  @Roles(UserRole.DOCTOR)
+  @Post('/:childId/caregivers')
+  async addCaregiverToChild(
+    @Param('childId') childId: string,
+    @Body() addCaregiverDto: AddCaregiverToChildDto,
+    @GetUser() user: AuthUser,
+  ): Promise<ChildResponseDto> {
+    const child = await this.childrenService.addCaregiverToChild(
+      childId,
+      addCaregiverDto.caregiverId,
+      user.id,
+    );
+
+    return new ChildResponseDto(child);
+  }
+
+  @Roles(UserRole.DOCTOR)
+  @Delete('/:childId/caregivers/:caregiverId')
+  async removeCaregiverFromChild(
+    @Param('childId') childId: string,
+    @Param('caregiverId') caregiverId: string,
+    @GetUser() user: AuthUser,
+  ): Promise<ChildResponseDto> {
+    const child = await this.childrenService.removeCaregiverFromChild(
+      childId,
+      caregiverId,
+      user.id,
+    );
+
     return new ChildResponseDto(child);
   }
 }
