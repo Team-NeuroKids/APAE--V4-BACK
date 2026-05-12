@@ -12,7 +12,7 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
     private readonly utils: UtilsService,
-  ) { }
+  ) {}
 
   async signIn({ email, password }: SignInDto): Promise<SignInOutput> {
     const user = await this.userService.findByEmail(email);
@@ -21,7 +21,10 @@ export class AuthService {
       throw new UnauthorizedException('Credenciais inválidas');
     }
 
-    const isPasswordValid = await this.utils.compare_password(password, user.password);
+    const isPasswordValid = await this.utils.compare_password(
+      password,
+      user.password,
+    );
 
     if (!isPasswordValid) {
       throw new UnauthorizedException('Credenciais inválidas');
