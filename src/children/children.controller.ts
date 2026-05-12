@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Post,
   Put,
@@ -21,7 +23,7 @@ import { ChildrenService } from './children.service';
 import { ListChildsRequestDto } from './dto/list-childs-request.dto';
 import { PaginatedChildsResponseDto } from './dto/list-childs-response.dto';
 import { RolesGuard } from 'src/common/guards/roles.guard';
-import { AddCaregiverToChildDto } from './dto/add-caregiver-to-child.dto';
+import { AddResponsibleToChildDto } from './dto/add-responsible-to-child.dto';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('children')
@@ -104,6 +106,7 @@ export class ChildrenController {
     return new ChildResponseDto(child);
   }
 
+  @HttpCode(HttpStatus.OK)
   @Roles(UserRole.ADMIN)
   @Post(':id/restore')
   async restoreChild(@Param('id') id: string): Promise<ChildResponseDto> {
@@ -111,32 +114,32 @@ export class ChildrenController {
     return new ChildResponseDto(child);
   }
 
-  @Roles(UserRole.DOCTOR)
-  @Post('/:childId/caregivers')
-  async addCaregiverToChild(
+  @Roles(UserRole.DOCTOR, UserRole.CAREGIVER)
+  @Post('/:childId/responsibles')
+  async addResponsibleToChild(
     @Param('childId') childId: string,
-    @Body() addCaregiverDto: AddCaregiverToChildDto,
+    @Body() addResponsibleDto: AddResponsibleToChildDto,
     @GetUser() user: AuthUser,
   ): Promise<ChildResponseDto> {
-    const child = await this.childrenService.addCaregiverToChild(
+    const child = await this.childrenService.addResponsibleToChild(
       childId,
-      addCaregiverDto.caregiverId,
+      addResponsibleDto.responsibleId,
       user.id,
     );
 
     return new ChildResponseDto(child);
   }
 
-  @Roles(UserRole.DOCTOR)
-  @Delete('/:childId/caregivers/:caregiverId')
-  async removeCaregiverFromChild(
+  @Roles(UserRole.DOCTOR, UserRole.CAREGIVER)
+  @Delete('/:childId/responsibles/:responsibleId')
+  async removeResponsibleFromChild(
     @Param('childId') childId: string,
-    @Param('caregiverId') caregiverId: string,
+    @Param('responsibleId') responsibleId: string,
     @GetUser() user: AuthUser,
   ): Promise<ChildResponseDto> {
-    const child = await this.childrenService.removeCaregiverFromChild(
+    const child = await this.childrenService.removeResponsibleFromChild(
       childId,
-      caregiverId,
+      responsibleId,
       user.id,
     );
 

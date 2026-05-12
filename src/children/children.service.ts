@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import { CreateChildDto } from './dto/create-child.dto';
-import { Child } from '@prisma/client';
+import { Child, Prisma } from '@prisma/client';
 import { UpdateChildDto } from './dto/update-child.dto';
 import { ListChildsRequestDto } from './dto/list-childs-request.dto';
 import { PaginatedChildsResponseDto } from './dto/list-childs-response.dto';
@@ -45,10 +45,20 @@ export class ChildrenService {
         deleted_at: null,
         ...(search
           ? {
-              name: {
-                contains: search,
-                mode: 'insensitive',
-              },
+              OR: [
+                {
+                  name: {
+                    contains: search,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  cpf: {
+                    contains: search,
+                    mode: 'insensitive',
+                  },
+                },
+              ],
             }
           : {}),
       },
@@ -101,10 +111,20 @@ export class ChildrenService {
         },
         ...(search
           ? {
-              name: {
-                contains: search,
-                mode: 'insensitive',
-              },
+              OR: [
+                {
+                  name: {
+                    contains: search,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  cpf: {
+                    contains: search,
+                    mode: 'insensitive',
+                  },
+                },
+              ],
             }
           : {}),
       },
@@ -161,54 +181,85 @@ export class ChildrenService {
     });
   }
 
-  async addCaregiverToChild(
+  async addResponsibleToChild(
     childId: string,
-    caregiverId: string,
+    responsibleId: string,
     userId: string,
   ): Promise<Child> {
     await this.validateOwnership(childId, userId);
 
-    const user = await this.prisma.user.findUniqueOrThrow({
-      where: { id: caregiverId },
-      select: { id: true, role: true },
+    await this.prisma.user.findUniqueOrThrow({
+      where: { id: responsibleId },
     });
-
-    if ((user.role as UserRole) !== UserRole.CAREGIVER) {
-      throw new BadRequestException('O usuário deve ser um responsável');
-    }
 
     return await this.prisma.child.update({
       where: { id: childId },
       data: {
         responsible_links: {
           create: {
-            user_id: caregiverId,
+            user_id: responsibleId,
           },
         },
       },
     });
   }
 
-  async removeCaregiverFromChild(
+  async removeResponsibleFromChild(
     childId: string,
-    caregiverId: string,
+    responsibleId: string,
     userId: string,
   ): Promise<Child> {
     await this.validateOwnership(childId, userId);
 
-    return this.prisma.child.update({
-      where: { id: childId },
-      data: {
-        responsible_links: {
-          delete: {
-            user_id_child_id: {
-              user_id: caregiverId,
-              child_id: childId,
+    return this.prisma.$transaction(async (tx) => {
+      const link = await tx.userChild.findUnique({
+        where: {
+          user_id_child_id: { user_id: responsibleId, child_id: childId },
+        },
+        include: { user: { select: { role: true } } },
+      });
+
+      if (!link) {
+        throw new NotFoundException(
+          'Este responsável já não está vinculado a esta criança.',
+        );
+      }
+
+      await this.ensureMinimumResponsibles(
+        childId,
+        link.user.role as UserRole,
+        tx,
+      );
+
+      return tx.child.update({
+        where: { id: childId },
+        data: {
+          responsible_links: {
+            delete: {
+              user_id_child_id: { user_id: responsibleId, child_id: childId },
             },
           },
         },
-      },
+      });
     });
+  }
+
+  private async ensureMinimumResponsibles(
+    childId: string,
+    role: UserRole,
+    tx?: Prisma.TransactionClient,
+  ): Promise<void> {
+    const prismaClient = tx ?? this.prisma;
+    const roleCount = await prismaClient.userChild.count({
+      where: { child_id: childId, user: { role } },
+    });
+
+    if (roleCount <= 1) {
+      const roleName = role === UserRole.DOCTOR ? 'Médico' : 'Cuidador';
+      throw new BadRequestException(
+        `Ação bloqueada. A criança deve ter pelo menos um ${roleName} vinculado.`,
+      );
+    }
   }
 
   async validateOwnership(childId: string, userId: string) {
