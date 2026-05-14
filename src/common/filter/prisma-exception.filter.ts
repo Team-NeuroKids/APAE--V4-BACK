@@ -29,6 +29,11 @@ export class PrismaExceptionFilter implements ExceptionFilter {
         status = HttpStatus.NOT_FOUND;
         message = 'Registro não encontrado. O recurso solicitado não existe.';
         break;
+      case 'P2017': // Relation not connected
+        status = HttpStatus.NOT_FOUND;
+        message =
+          'Registro não encontrado ou a relação entre os itens não existe.';
+        break;
 
       case 'P2003': // Foreign key constraint failed
         status = HttpStatus.UNPROCESSABLE_ENTITY;

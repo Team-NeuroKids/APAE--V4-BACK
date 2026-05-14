@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Post,
   Put,
@@ -21,6 +23,7 @@ import { ChildrenService } from './children.service';
 import { ListChildsRequestDto } from './dto/list-childs-request.dto';
 import { PaginatedChildsResponseDto } from './dto/list-childs-response.dto';
 import { RolesGuard } from 'src/common/guards/roles.guard';
+import { AddResponsibleToChildDto } from './dto/add-responsible-to-child.dto';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('children')
@@ -103,10 +106,43 @@ export class ChildrenController {
     return new ChildResponseDto(child);
   }
 
+  @HttpCode(HttpStatus.OK)
   @Roles(UserRole.ADMIN)
   @Post(':id/restore')
   async restoreChild(@Param('id') id: string): Promise<ChildResponseDto> {
     const child = await this.childrenService.restoreChild(id);
+    return new ChildResponseDto(child);
+  }
+
+  @Roles(UserRole.DOCTOR, UserRole.CAREGIVER)
+  @Post('/:childId/responsibles')
+  async addResponsibleToChild(
+    @Param('childId') childId: string,
+    @Body() addResponsibleDto: AddResponsibleToChildDto,
+    @GetUser() user: AuthUser,
+  ): Promise<ChildResponseDto> {
+    const child = await this.childrenService.addResponsibleToChild(
+      childId,
+      addResponsibleDto.responsibleId,
+      user.id,
+    );
+
+    return new ChildResponseDto(child);
+  }
+
+  @Roles(UserRole.DOCTOR, UserRole.CAREGIVER)
+  @Delete('/:childId/responsibles/:responsibleId')
+  async removeResponsibleFromChild(
+    @Param('childId') childId: string,
+    @Param('responsibleId') responsibleId: string,
+    @GetUser() user: AuthUser,
+  ): Promise<ChildResponseDto> {
+    const child = await this.childrenService.removeResponsibleFromChild(
+      childId,
+      responsibleId,
+      user.id,
+    );
+
     return new ChildResponseDto(child);
   }
 }
