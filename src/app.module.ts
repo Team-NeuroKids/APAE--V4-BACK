@@ -8,8 +8,7 @@ import { getLoggerConfig } from './common/config/logger.config';
 import { CommonModule } from './common/common.module';
 import { validate } from './common/config/env.validation'
 import { WebsocketModule } from './websocket/websocket.module';
-
-import { SessionsModule } from './sessions/sessions.module';
+import { PresenceModule } from './presence/presence.module';
 import { GameModule } from './game/game.module';
 
 @Module({
@@ -28,7 +27,7 @@ import { GameModule } from './game/game.module';
     AuthModule,
     ChildrenModule,
     WebsocketModule,
-    SessionsModule,
+    PresenceModule,
     GameModule,
   ],
   controllers: [],
