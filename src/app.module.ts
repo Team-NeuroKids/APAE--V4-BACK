@@ -5,7 +5,9 @@ import { AuthModule } from './auth/auth.module';
 import { ChildrenModule } from './children/children.module';
 import { CommonModule } from './common/common.module';
 import { validate } from './common/config/env.validation'
-import { SessionGateway } from './sessions/gateway/session.gateway';
+import { WebsocketModule } from './websocket/websocket.module';
+
+import { SessionsModule } from './sessions/sessions.module';
 
 @Module({
   imports: [
@@ -17,8 +19,10 @@ import { SessionGateway } from './sessions/gateway/session.gateway';
     UserModule,
     AuthModule,
     ChildrenModule,
+    WebsocketModule,
+    SessionsModule,
   ],
   controllers: [],
-  providers: [SessionGateway],
+  providers: [],
 })
 export class AppModule { }
