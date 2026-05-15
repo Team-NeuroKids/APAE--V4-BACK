@@ -26,4 +26,4 @@ import { PrismaService } from 'prisma/prisma.service';
   controllers: [AuthController],
   exports: [AuthService, JwtModule],
 })
-export class AuthModule { }
+export class AuthModule {}
