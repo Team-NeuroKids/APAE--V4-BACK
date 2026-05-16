@@ -13,9 +13,13 @@ Acompanhamento de todas as mudanças e versões do sistema **APAE V4**.
 ### 🧹 Melhorias
 -->
 
-## 4.2.0 - 07/05/2026
+## 4.3.0 - 15/05/2026
 
-**Resumo do Sistema**:
+### 1. WebSockets e Sessões
+  **Refatoração Global de WebSocket**: Você substituiu o antigo `SessionGateway` por um `WebsocketModule` global.
+  **Gestão de Presença (`SessionsModule`)**: Implementou um serviço e controller de sessões para rastrear usuários online em tempo real, validando a conexão via JWT e permitindo que o frontend consulte quem está ativo.
+
+## 4.2.0 - 07/05/2026
 
 ### 📚 Documentação
 - **Instruções para IA**: Adição de regras e convençãoes de código para a IA seguir em `.agent/rules`

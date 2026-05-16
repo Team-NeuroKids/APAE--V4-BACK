@@ -7,6 +7,8 @@ import { LoggerModule } from 'nestjs-pino';
 import { getLoggerConfig } from './common/config/logger.config';
 import { CommonModule } from './common/common.module';
 import { validate } from './common/config/env.validation'
+import { WebsocketModule } from './websocket/websocket.module';
+import { PresenceModule } from './presence/presence.module';
 import { GameModule } from './game/game.module';
 
 @Module({
@@ -24,9 +26,11 @@ import { GameModule } from './game/game.module';
     UserModule,
     AuthModule,
     ChildrenModule,
+    WebsocketModule,
+    PresenceModule,
     GameModule,
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }
