@@ -1,7 +1,7 @@
 import { Params } from 'nestjs-pino';
 import { randomUUID } from 'node:crypto';
 import { ConfigService } from '@nestjs/config';
-import { JwtPayload } from '../../auth/types';
+import { AuthUser } from '../../auth/types';
 
 export const getLoggerConfig = (configService: ConfigService): Params => {
   const isProduction = configService.get<string>('NODE_ENV') === 'production';
@@ -14,9 +14,9 @@ export const getLoggerConfig = (configService: ConfigService): Params => {
       },
       genReqId: (req) => req.headers['x-request-id'] || randomUUID(),
       customProps: (req: any) => {
-        const user = req.user as JwtPayload;
+        const user = req.user as AuthUser;
         return {
-          userId: user?.sub || 'anonymous',
+          userId: user?.id || 'anonymous',
           userRole: user?.role || 'none',
         };
       },
