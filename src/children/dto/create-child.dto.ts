@@ -19,7 +19,7 @@ export class CreateChildDto {
   name: string;
 
   @ApiProperty({
-    example: '187.652.100-77',
+    example: '18765210077',
   })
   @Length(11, 14)
   @IsString()

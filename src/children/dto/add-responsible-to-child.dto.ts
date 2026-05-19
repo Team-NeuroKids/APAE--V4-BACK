@@ -3,7 +3,7 @@ import { IsNotEmpty, IsString } from 'class-validator';
 
 export class AddResponsibleToChildDto {
   @ApiProperty({
-    example: '123e4567-e89b-12d3-a456-426614174000',
+    example: 'kbzny5ftzs7pctb7eb9uk58u',
   })
   @IsNotEmpty()
   @IsString()

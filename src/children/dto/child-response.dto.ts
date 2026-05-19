@@ -4,7 +4,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class ChildResponseDto {
   @ApiProperty({
-    example: '123e4567-e89b-12d3-a456-426614174000',
+    example: 'kbzny5ftzs7pctb7eb9uk58u',
   })
   id: string;
 
