@@ -1,15 +1,4 @@
-import { IsOptional, IsString } from 'class-validator';
+import { PartialType } from '@nestjs/swagger';
+import { CreateGameDto } from './create-game.dto';
 
-export class UpdateGameDto {
-  @IsString()
-  @IsOptional()
-  title?: string;
-
-  @IsString()
-  @IsOptional()
-  description?: string;
-
-  @IsString()
-  @IsOptional()
-  thumbnail?: string;
-}
+export class UpdateGameDto extends PartialType(CreateGameDto) {}
