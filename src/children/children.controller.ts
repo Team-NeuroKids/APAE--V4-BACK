@@ -24,12 +24,17 @@ import { ListChildsRequestDto } from './dto/list-childs-request.dto';
 import { PaginatedChildsResponseDto } from './dto/list-childs-response.dto';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { AddResponsibleToChildDto } from './dto/add-responsible-to-child.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ChildrenSwagger } from './children.swagger';
 
+@ApiTags('Crianças')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('children')
 export class ChildrenController {
   constructor(private readonly childrenService: ChildrenService) {}
 
+  @ChildrenSwagger.createChild()
   @Roles(UserRole.DOCTOR)
   @Post()
   async createChild(
@@ -43,6 +48,7 @@ export class ChildrenController {
     return new ChildResponseDto(child);
   }
 
+  @ChildrenSwagger.getChildren()
   @Roles(UserRole.ADMIN)
   @Get()
   async getChildren(
@@ -55,6 +61,7 @@ export class ChildrenController {
     };
   }
 
+  @ChildrenSwagger.getChildrenByUser()
   @Roles(UserRole.DOCTOR, UserRole.CAREGIVER)
   @Get('/me')
   async getChildrenByUser(
@@ -71,6 +78,7 @@ export class ChildrenController {
     };
   }
 
+  @ChildrenSwagger.getChildById()
   @Roles(UserRole.DOCTOR, UserRole.CAREGIVER)
   @Get(':id')
   async getChildById(
@@ -81,6 +89,7 @@ export class ChildrenController {
     return new ChildResponseDto(child);
   }
 
+  @ChildrenSwagger.updateChild()
   @Roles(UserRole.DOCTOR)
   @Put(':id')
   async updateChild(
@@ -96,6 +105,7 @@ export class ChildrenController {
     return new ChildResponseDto(child);
   }
 
+  @ChildrenSwagger.deleteChild()
   @Roles(UserRole.DOCTOR)
   @Delete(':id')
   async deleteChild(
@@ -106,6 +116,7 @@ export class ChildrenController {
     return new ChildResponseDto(child);
   }
 
+  @ChildrenSwagger.restoreChild()
   @HttpCode(HttpStatus.OK)
   @Roles(UserRole.ADMIN)
   @Post(':id/restore')
@@ -114,6 +125,7 @@ export class ChildrenController {
     return new ChildResponseDto(child);
   }
 
+  @ChildrenSwagger.addResponsibleToChild()
   @Roles(UserRole.DOCTOR, UserRole.CAREGIVER)
   @Post('/:childId/responsibles')
   async addResponsibleToChild(
@@ -130,6 +142,7 @@ export class ChildrenController {
     return new ChildResponseDto(child);
   }
 
+  @ChildrenSwagger.removeResponsibleFromChild()
   @Roles(UserRole.DOCTOR, UserRole.CAREGIVER)
   @Delete('/:childId/responsibles/:responsibleId')
   async removeResponsibleFromChild(
