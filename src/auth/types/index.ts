@@ -22,7 +22,6 @@ export interface SessionJwtPayload {
   sub: string;
   sessionId: string;
   childId: string;
-  type: string;
   exp: number;
   iat: number;
 }
