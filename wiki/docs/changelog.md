@@ -13,6 +13,12 @@ Acompanhamento de todas as mudanças e versões do sistema **APAE V4**.
 ### 🧹 Melhorias
 -->
 
+## 4.4.1 - 19/05/2026
+
+### 🧹 Melhorias
+
+- **Documentação**: Adição de documentação Swagger para todos os endpoints.
+
 ## 4.4.0 - 18/05/2026
 
 ### 🚀 Novidades & Melhorias
