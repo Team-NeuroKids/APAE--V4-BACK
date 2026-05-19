@@ -27,7 +27,8 @@ export default defineConfig({
         text: 'Arquitetura',
         items: [
           { text: 'Banco de Dados', link: '/architecture/database' },
-          { text: 'Autenticação', link: '/architecture/auth' }
+          { text: 'Autenticação', link: '/architecture/auth' },
+          { text: 'Escalabilidade e Riscos', link: '/architecture/scalability' }
         ]
       },
       {

@@ -10,6 +10,8 @@ import { validate } from './common/config/env.validation'
 import { WebsocketModule } from './websocket/websocket.module';
 import { PresenceModule } from './presence/presence.module';
 import { GameModule } from './game/game.module';
+import { SessionsModule } from './sessions/sessions.module';
+import { GameHistoriesModule } from './game-histories/game-histories.module';
 
 @Module({
   imports: [
@@ -29,6 +31,8 @@ import { GameModule } from './game/game.module';
     WebsocketModule,
     PresenceModule,
     GameModule,
+    SessionsModule,
+    GameHistoriesModule,
   ],
   controllers: [],
   providers: [],

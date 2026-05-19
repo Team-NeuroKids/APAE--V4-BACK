@@ -1,34 +1,17 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-  Logger,
-} from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { Socket } from 'socket.io';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { WsException } from '@nestjs/websockets';
+import { AuthSocket } from 'src/websocket/types';
 
 @Injectable()
 export class WsAuthGuard implements CanActivate {
-  private readonly logger = new Logger(WsAuthGuard.name);
+  canActivate(context: ExecutionContext): boolean {
+    const client = context.switchToWs().getClient<AuthSocket>();
+    const sessionId = client.data.sessionId;
+    const childId = client.data.childId;
 
-  constructor(private readonly jwtService: JwtService) {}
-
-  async canActivate(context: ExecutionContext): Promise<boolean> {
-    try {
-      const client: Socket = context.switchToWs().getClient<Socket>();
-      const token =
-        client.handshake.auth?.token ||
-        client.handshake.headers?.authorization?.split(' ')[1];
-
-      if (!token) {
-        return false;
-      }
-
-      const payload = await this.jwtService.verifyAsync(token);
-      client.data.userId = payload.sub;
-      return true;
-    } catch (err) {
-      return false;
+    if (!sessionId || !childId) {
+      throw new WsException('Sessão inválida ou não autorizada');
     }
+    return true;
   }
 }

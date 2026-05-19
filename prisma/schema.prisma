@@ -91,6 +91,8 @@ model Session {
 
   created_at DateTime @default(now())
 
+  @@index([child_id])
+  @@index([opened_by_id])
   @@map("sessions")
 }
 
@@ -112,5 +114,9 @@ model GameHistory {
 
   created_at DateTime @default(now())
 
+  @@index([child_id])
+  @@index([session_id])
+  @@index([game_id])
+  @@index([created_at])
   @@map("game_histories")
 }

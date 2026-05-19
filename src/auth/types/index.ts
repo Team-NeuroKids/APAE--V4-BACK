@@ -17,3 +17,11 @@ export interface AuthUser {
   email: string;
   role: UserRole;
 }
+
+export interface SessionJwtPayload {
+  sub: string;
+  sessionId: string;
+  childId: string;
+  exp: number;
+  iat: number;
+}
