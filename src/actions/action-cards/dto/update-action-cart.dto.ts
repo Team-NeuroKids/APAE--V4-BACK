@@ -1,15 +1,4 @@
-import { IsOptional, IsString } from 'class-validator';
+import { CreateActionCardDto } from './create-action-card.dto';
+import { PartialType } from '@nestjs/swagger';
 
-export class UpdateActionCardDto {
-  @IsString()
-  @IsOptional()
-  label?: string;
-
-  @IsString()
-  @IsOptional()
-  image_url?: string;
-
-  @IsString()
-  @IsOptional()
-  audio_url?: string;
-}
+export class UpdateActionCardDto extends PartialType(CreateActionCardDto) {}
