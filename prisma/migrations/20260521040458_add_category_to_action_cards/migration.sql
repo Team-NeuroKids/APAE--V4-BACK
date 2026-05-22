@@ -1,0 +1,1 @@
+ALTER TABLE "action_cards" ADD COLUMN "category" TEXT NOT NULL;
