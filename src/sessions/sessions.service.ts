@@ -58,7 +58,7 @@ export class SessionsService {
       where: { child_id: childId },
       include: {
         _count: {
-          select: { game_histories: true },
+          select: { game_histories: true, actionLogs: true },
         },
       },
       orderBy: { created_at: 'desc' },
@@ -88,7 +88,7 @@ export class SessionsService {
       where: { opened_by_id: userId },
       include: {
         _count: {
-          select: { game_histories: true },
+          select: { game_histories: true, actionLogs: true },
         },
       },
       orderBy: { created_at: 'desc' },
@@ -115,7 +115,7 @@ export class SessionsService {
       },
       include: {
         _count: {
-          select: { game_histories: true },
+          select: { game_histories: true, actionLogs: true },
         },
       },
     });
