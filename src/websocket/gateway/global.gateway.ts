@@ -25,6 +25,11 @@ import { AllWsExceptionsFilter } from 'src/common/filter/all-ws-exception.filter
 import { AuthService } from 'src/auth/auth.service';
 import { GetWsClientData } from 'src/common/decorators/ws-client-data.decorator';
 import type { AuthSocket, WsClientData } from '../types';
+import {
+  CreateActionClickDto,
+  CreateActionLogDto,
+} from 'src/actions/action-logs/dto/create-action-log.dto';
+import { ActionLogsService } from 'src/actions/action-logs/action-logs.service';
 
 @WebSocketGateway({
   cors: {
@@ -43,6 +48,7 @@ export class GlobalGateway implements OnGatewayConnection, OnGatewayDisconnect {
     private readonly presenceService: PresenceService,
     private readonly gameHistoriesService: GameHistoriesService,
     private readonly authService: AuthService,
+    private readonly actionLogsService: ActionLogsService,
   ) {}
 
   async handleConnection(client: AuthSocket): Promise<void> {
@@ -89,6 +95,23 @@ export class GlobalGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     await this.gameHistoriesService.saveScore(createDto);
 
+    return { status: 'success' };
+  }
+
+  @UseGuards(WsAuthGuard)
+  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
+  @SubscribeMessage('action_click')
+  async handleActionClick(
+    @GetWsClientData() { sessionId, childId }: WsClientData,
+    @MessageBody() payload: CreateActionClickDto,
+  ) {
+    const createDto: CreateActionLogDto = {
+      action_card_id: payload.action_card_id,
+      session_id: sessionId,
+      child_id: childId,
+    };
+
+    await this.actionLogsService.logAction(createDto);
     return { status: 'success' };
   }
 }
