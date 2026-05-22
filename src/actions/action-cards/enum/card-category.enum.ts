@@ -1,0 +1,6 @@
+export enum CardCategory {
+  COLORS = 'COLORS',
+  NUMBERS = 'NUMBERS',
+  LETTERS = 'LETTERS',
+  NECESSITIES = 'NECESSITIES',
+}
