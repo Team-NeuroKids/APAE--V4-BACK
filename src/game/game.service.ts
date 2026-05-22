@@ -21,11 +21,10 @@ export class GameService {
     });
   }
 
-  async getGames(): Promise<Game[]> {
+  async getGames(includeAll?: boolean): Promise<Game[]> {
     return this.prisma.game.findMany({
-      where: {
-        deleted_at: null,
-      },
+      where: includeAll ? {} : { deleted_at: null },
+      orderBy: { created_at: 'desc' },
     });
   }
 
@@ -66,6 +65,13 @@ export class GameService {
       data: {
         deleted_at: null,
       },
+    });
+  }
+
+  async hardDeleteGame(id: string): Promise<Game> {
+    await this.getGameById(id);
+    return this.prisma.game.delete({
+      where: { id },
     });
   }
 }

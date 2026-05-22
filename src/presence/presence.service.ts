@@ -2,30 +2,42 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class PresenceService {
-  private activeConnections = new Map<string, Set<string>>();
+  // Mapa armazenando: userId => lastHeartbeatTime (milissegundos)
+  private activeConnections = new Map<string, number>();
 
+  updateHeartbeat(userId: string): void {
+    this.activeConnections.set(userId, Date.now());
+  }
+
+  // Mantendo compatibilidade com o GlobalGateway que ainda usa Websockets
   addConnection(userId: string, socketId: string): void {
-    if (!this.activeConnections.has(userId)) {
-      this.activeConnections.set(userId, new Set());
-    }
-    this.activeConnections.get(userId)!.add(socketId);
+    this.updateHeartbeat(userId);
   }
 
   removeConnection(userId: string, socketId: string): void {
-    const userSockets = this.activeConnections.get(userId);
-    if (userSockets) {
-      userSockets.delete(socketId);
-      if (userSockets.size === 0) {
-        this.activeConnections.delete(userId);
-      }
-    }
+    // Agora é limpo automaticamente após 60s
   }
 
   isUserOnline(userId: string): boolean {
-    return this.activeConnections.has(userId);
+    const lastSeen = this.activeConnections.get(userId);
+    if (!lastSeen) return false;
+    // Considera online se o último ping foi há menos de 60 segundos
+    return Date.now() - lastSeen < 60000;
   }
 
   getOnlineUsers(): string[] {
-    return Array.from(this.activeConnections.keys());
+    const now = Date.now();
+    const onlineUsers: string[] = [];
+
+    for (const [userId, lastSeen] of this.activeConnections.entries()) {
+      if (now - lastSeen < 60000) {
+        onlineUsers.push(userId);
+      } else {
+        // Limpar inativos
+        this.activeConnections.delete(userId);
+      }
+    }
+
+    return onlineUsers;
   }
 }

@@ -126,9 +126,9 @@ export class GameSwagger {
   static deleteGame() {
     return applyDecorators(
       ApiOperation({
-        summary: 'Remover jogo (Soft Delete)',
+        summary: 'Desativar jogo (Soft Delete)',
         description:
-          'Realiza a remoção lógica de um jogo. Apenas administradores.',
+          'Realiza a desativação de um jogo no catálogo. Apenas administradores e doutores.',
       }),
       ApiParam({
         name: 'id',
@@ -147,7 +147,7 @@ export class GameSwagger {
       }),
       ApiResponse({
         status: 403,
-        description: 'Acesso negado. Apenas administradores.',
+        description: 'Acesso negado. Apenas administradores e doutores.',
       }),
       ApiResponse({
         status: 404,
@@ -159,9 +159,9 @@ export class GameSwagger {
   static restoreGame() {
     return applyDecorators(
       ApiOperation({
-        summary: 'Restaurar jogo removido',
+        summary: 'Ativar jogo removido (Restore)',
         description:
-          'Restaura um jogo que havia sido removido logicamente. Apenas administradores.',
+          'Ativa novamente um jogo que havia sido desativado. Apenas administradores e doutores.',
       }),
       ApiParam({
         name: 'id',
@@ -172,6 +172,39 @@ export class GameSwagger {
       ApiResponse({
         status: 200,
         description: 'Jogo restaurado com sucesso.',
+        type: GameResponseDto,
+      }),
+      ApiResponse({
+        status: 401,
+        description: 'Usuário não autenticado.',
+      }),
+      ApiResponse({
+        status: 403,
+        description: 'Acesso negado. Apenas administradores e doutores.',
+      }),
+      ApiResponse({
+        status: 404,
+        description: 'Jogo não encontrado.',
+      }),
+    );
+  }
+
+  static hardDeleteGame() {
+    return applyDecorators(
+      ApiOperation({
+        summary: 'Remover jogo definitivamente (Hard Delete)',
+        description:
+          'Exclui permanentemente um jogo do banco de dados. Apenas administradores.',
+      }),
+      ApiParam({
+        name: 'id',
+        description: 'ID do jogo a ser removido definitivamente',
+        type: 'string',
+        example: 'cuid1234567890',
+      }),
+      ApiResponse({
+        status: 200,
+        description: 'Jogo excluído com sucesso.',
         type: GameResponseDto,
       }),
       ApiResponse({

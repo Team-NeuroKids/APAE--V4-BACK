@@ -1,8 +1,30 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
-import { PaginatedGameHistoriesResponseDto } from './dto/list-game-histories-response.dto';
+import { GameHistoryResponseDto, PaginatedGameHistoriesResponseDto } from './dto/list-game-histories-response.dto';
 
 export class GameHistoriesSwagger {
+  static createHistory() {
+    return applyDecorators(
+      ApiOperation({
+        summary: 'Salvar um novo histórico de jogo',
+        description: 'Registra a pontuação e os dados de uma partida recém terminada.',
+      }),
+      ApiResponse({
+        status: 201,
+        description: 'Histórico salvo com sucesso.',
+        type: GameHistoryResponseDto,
+      }),
+      ApiResponse({
+        status: 400,
+        description: 'Dados inválidos.',
+      }),
+      ApiResponse({
+        status: 401,
+        description: 'Usuário não autenticado.',
+      }),
+    );
+  }
+
   static getGameHistoriesByChild() {
     return applyDecorators(
       ApiOperation({

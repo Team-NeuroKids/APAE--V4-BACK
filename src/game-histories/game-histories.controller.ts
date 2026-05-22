@@ -1,9 +1,10 @@
-import { Controller, Get, Param, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards, Query, Post, Body } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { GameHistoriesService } from './game-histories.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { ListGameHistoriesRequestDto } from './dto/list-game-histories-request.dto';
+import { CreateGameHistoryDto } from './dto/create-game-history.dto';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { GetUser } from 'src/common/decorators/get-user.decorator';
 import { UserRole } from 'src/common/enums/roles.enum';
@@ -18,6 +19,14 @@ import { GameHistoriesSwagger } from './game-histories.swagger';
 @Roles(UserRole.DOCTOR, UserRole.CAREGIVER)
 export class GameHistoriesController {
   constructor(private readonly gameHistoriesService: GameHistoriesService) {}
+
+  @GameHistoriesSwagger.createHistory()
+  @Post()
+  async createHistory(
+    @Body() body: CreateGameHistoryDto,
+  ) {
+    return this.gameHistoriesService.saveScore(body);
+  }
 
   @GameHistoriesSwagger.getGameHistoriesByChild()
   @Get('child/:childId')

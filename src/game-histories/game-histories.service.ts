@@ -22,6 +22,9 @@ export class GameHistoriesService {
       data: {
         ...createGameHistoryDto,
       },
+      include: {
+        game: true,
+      },
     });
 
     this.logger.log(

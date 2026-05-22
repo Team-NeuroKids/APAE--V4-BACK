@@ -7,10 +7,13 @@ import {
   Post,
   Put,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { UserRole } from 'src/common/enums/roles.enum';
+import { GetUser } from 'src/common/decorators/get-user.decorator';
+import { AuthUser } from 'src/auth/types';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
@@ -38,8 +41,15 @@ export class GameController {
 
   @GameSwagger.getGames()
   @Get()
-  async getGames(): Promise<GameResponseDto[]> {
-    const games = await this.gameService.getGames();
+  async getGames(
+    @Query('all') all?: string,
+    @GetUser() user?: AuthUser,
+  ): Promise<GameResponseDto[]> {
+    let includeAll = false;
+    if (all === 'true' && user && (user.role === UserRole.ADMIN || user.role === UserRole.DOCTOR)) {
+      includeAll = true;
+    }
+    const games = await this.gameService.getGames(includeAll);
     return games.map((game) => new GameResponseDto(game));
   }
 
@@ -62,7 +72,7 @@ export class GameController {
   }
 
   @GameSwagger.deleteGame()
-  @Roles(UserRole.ADMIN)
+  @Roles(UserRole.ADMIN, UserRole.DOCTOR)
   @Delete(':id')
   async deleteGame(@Param('id') id: string): Promise<GameResponseDto> {
     const game = await this.gameService.deleteGame(id);
@@ -70,10 +80,18 @@ export class GameController {
   }
 
   @GameSwagger.restoreGame()
-  @Roles(UserRole.ADMIN)
+  @Roles(UserRole.ADMIN, UserRole.DOCTOR)
   @Post(':id/restore')
   async restoreGame(@Param('id') id: string): Promise<GameResponseDto> {
     const game = await this.gameService.restoreGame(id);
+    return new GameResponseDto(game);
+  }
+
+  @GameSwagger.hardDeleteGame()
+  @Roles(UserRole.ADMIN)
+  @Delete(':id/hard')
+  async hardDeleteGame(@Param('id') id: string): Promise<GameResponseDto> {
+    const game = await this.gameService.hardDeleteGame(id);
     return new GameResponseDto(game);
   }
 }
