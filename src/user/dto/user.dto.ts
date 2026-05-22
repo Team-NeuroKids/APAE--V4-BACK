@@ -1,5 +1,6 @@
 import { IsEmail, IsEnum, IsNotEmpty, IsString, Length } from 'class-validator';
 import { UserRole } from 'src/common/enums/roles.enum';
+import { IsCpf } from 'src/common/decorators/cpf.decorator';
 
 export class CreateUserDto {
   @IsString()
@@ -10,10 +11,9 @@ export class CreateUserDto {
   @IsNotEmpty()
   email!: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @Length(11, 14)
-  cpf!: string;
+@IsCpf()
+@IsNotEmpty()
+cpf!: string;
 
   @IsString()
   @IsNotEmpty()

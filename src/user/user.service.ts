@@ -21,7 +21,7 @@ export class UserService {
     const data = {
       name,
       email,
-      cpf,
+      cpf: cpf.replace(/[.\-]/g, ''),
       password: await this.utils.hash_password(password),
       role,
     };
