@@ -20,6 +20,9 @@ export class GameResponseDto {
   @ApiProperty()
   updated_at: Date;
 
+  @ApiPropertyOptional()
+  deleted_at: Date | null;
+
   constructor(game: Game) {
     this.id = game.id;
     this.title = game.title;
@@ -27,5 +30,6 @@ export class GameResponseDto {
     this.thumbnail = game.thumbnail;
     this.created_at = game.created_at;
     this.updated_at = game.updated_at;
+    this.deleted_at = game.deleted_at;
   }
 }

@@ -57,6 +57,7 @@ export class SessionsService {
       cursor: cursor ? { id: cursor } : undefined,
       where: { child_id: childId },
       include: {
+        child: true,
         _count: {
           select: { game_histories: true },
         },
@@ -87,6 +88,7 @@ export class SessionsService {
       cursor: cursor ? { id: cursor } : undefined,
       where: { opened_by_id: userId },
       include: {
+        child: true,
         _count: {
           select: { game_histories: true },
         },
@@ -114,6 +116,7 @@ export class SessionsService {
         child: { responsible_links: { some: { user_id: userId } } },
       },
       include: {
+        child: true,
         _count: {
           select: { game_histories: true },
         },

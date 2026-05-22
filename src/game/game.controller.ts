@@ -13,7 +13,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { UserRole } from 'src/common/enums/roles.enum';
 import { GetUser } from 'src/common/decorators/get-user.decorator';
-import { AuthUser } from 'src/auth/types';
+import type { AuthUser } from 'src/auth/types';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
@@ -72,7 +72,7 @@ export class GameController {
   }
 
   @GameSwagger.deleteGame()
-  @Roles(UserRole.ADMIN, UserRole.DOCTOR)
+  @Roles(UserRole.DOCTOR)
   @Delete(':id')
   async deleteGame(@Param('id') id: string): Promise<GameResponseDto> {
     const game = await this.gameService.deleteGame(id);
@@ -80,7 +80,7 @@ export class GameController {
   }
 
   @GameSwagger.restoreGame()
-  @Roles(UserRole.ADMIN, UserRole.DOCTOR)
+  @Roles(UserRole.DOCTOR)
   @Post(':id/restore')
   async restoreGame(@Param('id') id: string): Promise<GameResponseDto> {
     const game = await this.gameService.restoreGame(id);

@@ -24,11 +24,11 @@ export class GameHistoryResponseDto {
   @ApiProperty({ example: 2 })
   wrong_answers: number;
 
-  @ApiProperty({ example: 60, required: false })
-  time_spent?: number;
+  @ApiProperty({ example: 60, required: false, nullable: true })
+  time_spent?: number | null;
 
-  @ApiProperty({ example: 'Muito bem!', required: false })
-  observations?: string;
+  @ApiProperty({ example: 'Muito bem!', required: false, nullable: true })
+  observations?: string | null;
 
   @ApiProperty({ example: '2023-10-01T12:00:00Z' })
   created_at: Date;
