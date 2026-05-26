@@ -6,12 +6,13 @@ import { ChildrenModule } from './children/children.module';
 import { LoggerModule } from 'nestjs-pino';
 import { getLoggerConfig } from './common/config/logger.config';
 import { CommonModule } from './common/common.module';
-import { validate } from './common/config/env.validation'
+import { validate } from './common/config/env.validation';
 import { WebsocketModule } from './websocket/websocket.module';
 import { PresenceModule } from './presence/presence.module';
 import { GameModule } from './game/game.module';
 import { SessionsModule } from './sessions/sessions.module';
 import { GameHistoriesModule } from './game-histories/game-histories.module';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { GameHistoriesModule } from './game-histories/game-histories.module';
       inject: [ConfigService],
       useFactory: getLoggerConfig,
     }),
+    PrismaModule,
     CommonModule,
     UserModule,
     AuthModule,
@@ -37,4 +39,4 @@ import { GameHistoriesModule } from './game-histories/game-histories.module';
   controllers: [],
   providers: [],
 })
-export class AppModule { }
+export class AppModule {}

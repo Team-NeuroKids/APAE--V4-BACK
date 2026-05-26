@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UtilsService } from 'src/common/utils.service';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserOutput, GetUserInput, GetUserOutput } from 'src/user/types';
 import { CreateUserDto } from './dto/user.dto';
 import { ListUsersRequestDto } from './dto/list-users-request.dto';
@@ -32,20 +32,26 @@ export class UserService {
     return { id: user.id };
   }
 
-  async listUsers({ take, cursor, search }: ListUsersRequestDto): Promise<PaginatedUsersResponseDto> {
+  async listUsers({
+    take,
+    cursor,
+    search,
+  }: ListUsersRequestDto): Promise<PaginatedUsersResponseDto> {
     const users = await this.prisma.user.findMany({
       take: take + 1,
       skip: cursor ? 1 : 0,
       cursor: cursor ? { id: cursor } : undefined,
       where: {
         deleted_at: null,
-        ...(search ? {
-          OR: [
-            { name: { contains: search, mode: 'insensitive' } },
-            { email: { contains: search, mode: 'insensitive' } },
-            { cpf: { contains: search, mode: 'insensitive' } },
-          ],
-        } : {}),
+        ...(search
+          ? {
+              OR: [
+                { name: { contains: search, mode: 'insensitive' } },
+                { email: { contains: search, mode: 'insensitive' } },
+                { cpf: { contains: search, mode: 'insensitive' } },
+              ],
+            }
+          : {}),
       },
     });
 

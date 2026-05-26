@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from 'prisma/prisma.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 import type { CreateGameHistoryDto } from './dto/create-game-history.dto';
 import { ListGameHistoriesRequestDto } from './dto/list-game-histories-request.dto';
 import { ChildrenService } from 'src/children/children.service';

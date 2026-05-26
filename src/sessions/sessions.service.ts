@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'prisma/prisma.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { CreateSessionDto } from './dto/create-session.dto';
 import { ListSessionsRequestDto } from './dto/list-sessions-request.dto';
