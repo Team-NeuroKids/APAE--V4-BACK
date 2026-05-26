@@ -4,7 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaService } from 'prisma/prisma.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateChildDto } from './dto/create-child.dto';
 import { Child, Prisma } from '@prisma/client';
 import { UpdateChildDto } from './dto/update-child.dto';
